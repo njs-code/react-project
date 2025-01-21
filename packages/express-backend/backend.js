@@ -111,14 +111,20 @@ app.get("/users/:id", (req, res) => {
 //add to users_list
 const addUser = (user) => {
   users["users_list"].push(user);
-  return user;
+  return users["users_list"].includes(user);
 }
+
 //receive POST request
 app.post("/users", (req, res) => {
   const newUser = req.body; 
-  addUser(newUser);
-  console.log("Added user: ", req.body);
-  res.send();
+  let success = addUser(newUser);
+  if (success !== true){
+    console.log("Failed to add user ", newUser.name)
+    res.status(500).send("Error adding user");
+  } else{
+    console.log("Added user: ", req.body);
+    res.status(201).send('Created new user');
+  }
 });
 
           //DELETE user endpoint
