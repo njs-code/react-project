@@ -37,11 +37,10 @@ const users = {
     ]
   };
 
-//basic get endpoint
+//Return a very basic page
 app.get('/', (req,res) => {
     res.send("Hello, World!");
 });
-
 
 const findUserByName = (name)=> {
   //return matching users
@@ -50,16 +49,42 @@ const findUserByName = (name)=> {
   );
 };
 
-//return the users JSON
+
+const findUserByNameandJob = (name, job)=> {
+  //return matching users
+  return users["users_list"].filter(
+    (user) => user["name"] === name && user["job"] === job
+  );
+};
+
+const findUserByJob = (job) => {
+  return users.users_list.filter((user) => user.job === job)
+};
+
+//return multiple users 
 app.get("/users", (req,res)=>{
     const name = req.query.name;
-    //if name then filter for matching users
-    if (name != undefined){
+    const job = req.query.job;
+    //search matching names and jobs
+    if (job != undefined && name != undefined){
+      let result = findUserByNameandJob(name, job);
+      result = {users_list : result};
+      res.send(result);
+    }
+    //search matching names
+    else if (name != undefined && job == undefined){
       let result = findUserByName(name);
       result = {users_list: result};
       res.send(result);
+    }
+    //search matching jobs
+    else if (name == undefined && job != undefined){
+      let result = findUserByJob(job);
+      result = {users_list : result};
+      res.send(result);
+    }
     //otherwise send all users
-    } else{
+    else {
       res.send(users);
     }
 });
@@ -78,17 +103,35 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+        //POST user endpoint
+//add to users_list
 const addUser = (user) => {
   users["users_list"].push(user);
   return user;
 }
-
+//receive POST request
 app.post("/users", (req, res) => {
   const newUser = req.body; 
-  console.log(req.body);
   addUser(newUser);
+  console.log("Added user: ", req.body);
   res.send();
 });
+
+          //DELETE user endpoint
+//remove a user from users_list
+const removeUser = (user) => {
+  console.log(user);
+  users["users_list"] = users["users_list"].filter((usr) => usr.id !== user.id);
+  return user;
+}
+
+//receive a delete request
+app.delete("/users", (req, res) => {
+  const oldUser = req.body;
+  removeUser(oldUser);
+  console.log("removed user: ", oldUser);
+  res.send();
+})
 
 //
 app.listen(port, () => {
