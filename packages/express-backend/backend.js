@@ -41,6 +41,7 @@ const users = {
     ]
   };
 
+        // ============= GET endpoints =============
 //Return a very basic page
 app.get('/', (req,res) => {
     res.send("Hello, World!");
@@ -96,7 +97,6 @@ app.get("/users", (req,res)=>{
 const findUserById = (id) => 
   users["users_list"].find((user) => user["id"] === id);
 
-
 app.get("/users/:id", (req, res) => {
   const id = req.params["id"];
   let result = findUserById(id);
@@ -107,27 +107,33 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
-        //POST user endpoint
+        // =============  POST user endpoints ===========
 //add to users_list
 const addUser = (user) => {
   users["users_list"].push(user);
   return users["users_list"].includes(user);
 }
 
+const generateId = () => {
+  return Math.floor(Math.random() * 100000);
+}
+
 //receive POST request
 app.post("/users", (req, res) => {
   const newUser = req.body; 
+  newUser.id = generateId();
+  console.log("New user ID", newUser.id);
   let success = addUser(newUser);
   if (success !== true){
     console.log("Failed to add user ", newUser.name)
     res.status(500).send("Error adding user");
   } else{
     console.log("Added user: ", req.body);
-    res.status(201).send('Created new user');
+    res.status(201).json(newUser);
   }
 });
 
-          //DELETE user endpoint
+          // ==========    DELETE user endpoint ============
 //remove a user from users_list
 const removeUser = (user) => {
   console.log(user);
