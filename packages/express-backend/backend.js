@@ -54,19 +54,19 @@ const findUserByName = (name)=> {
   );
 };
 
-
+//return matching users to job and name
 const findUserByNameandJob = (name, job)=> {
-  //return matching users
   return users["users_list"].filter(
     (user) => user["name"] === name && user["job"] === job
   );
 };
 
+//return matching users to job
 const findUserByJob = (job) => {
   return users.users_list.filter((user) => user.job === job)
 };
 
-//return multiple users 
+//return multiple users by any combination of name or job
 app.get("/users", (req,res)=>{
     const name = req.query.name;
     const job = req.query.job;
@@ -94,9 +94,11 @@ app.get("/users", (req,res)=>{
     }
 });
 
+//return user by id
 const findUserById = (id) => 
   users["users_list"].find((user) => user["id"] === id);
 
+//get endpoint for user by ID
 app.get("/users/:id", (req, res) => {
   const id = req.params["id"];
   let result = findUserById(id);
@@ -114,11 +116,12 @@ const addUser = (user) => {
   return users["users_list"].includes(user);
 }
 
+//generate new user ID
 const generateId = () => {
   return Math.floor(Math.random() * 100000);
 }
 
-//receive POST request
+//receive POST request to add user
 app.post("/users", (req, res) => {
   const newUser = req.body; 
   newUser.id = generateId();
@@ -136,20 +139,33 @@ app.post("/users", (req, res) => {
           // ==========    DELETE user endpoint ============
 //remove a user from users_list
 const removeUser = (user) => {
-  console.log(user);
   users["users_list"] = users["users_list"].filter((usr) => usr.id !== user.id);
-  return user;
+  return !users["users_list"].includes(user);
 }
 
 //receive a delete request
-app.delete("/users", (req, res) => {
-  const oldUser = req.body;
-  removeUser(oldUser);
-  console.log("removed user: ", oldUser);
-  res.send();
+app.delete("/users/:id", (req, res) => {
+  //find id
+  const id = req.params["id"];
+  //return user with id
+  let user = findUserById(id);
+  //error if user does not exist
+  if (user === undefined){
+    res.status(404).send("User does not exist");
+  }
+  //attempt remove, return false if user is still in the list
+  let success = removeUser(user);
+  //if removal failed, throw error
+  if (success !== true){
+    console.log("Failed to remove user ", user)
+    res.status(500).send("Error removing user");
+  //else return 204 and user object
+  } else{
+    console.log("Removed user: ", user);
+    res.status(204).json(user);
+  }
 })
 
-//
 app.listen(port, () => {
     console.log(
         `Example app listening at http://localhost:${port}`
