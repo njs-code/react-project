@@ -118,20 +118,25 @@ const addUser = (user) => {
 
 //generate new user ID
 const generateId = () => {
-  return Math.floor(Math.random() * 100000);
+  let id; 
+  do {
+    id = Math.floor(Math.random() * 100000);
+    console.log(users["users_list"].includes(id));
+  } while (users["users_list"].includes(id));
+  return id; 
 }
 
 //receive POST request to add user
 app.post("/users", (req, res) => {
   const newUser = req.body; 
-  newUser.id = generateId();
+  newUser.id = `${generateId()}`;
   console.log("New user ID", newUser.id);
   let success = addUser(newUser);
   if (success !== true){
     console.log("Failed to add user ", newUser.name)
     res.status(500).send("Error adding user");
   } else{
-    console.log("Added user: ", req.body);
+    console.log("Added user: ", newUser);
     res.status(201).json(newUser);
   }
 });
@@ -148,7 +153,7 @@ app.delete("/users/:id", (req, res) => {
   //find id
   const id = req.params["id"];
   //return user with id
-  let user = findUserById(id);
+  const user = findUserById(id);
   //error if user does not exist
   if (user === undefined){
     res.status(404).send("User does not exist");
@@ -162,7 +167,7 @@ app.delete("/users/:id", (req, res) => {
   //else return 204 and user object
   } else{
     console.log("Removed user: ", user);
-    res.status(204).json(user);
+    res.status(204).send();
   }
 })
 

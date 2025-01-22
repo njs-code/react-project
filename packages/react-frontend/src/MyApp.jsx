@@ -33,36 +33,48 @@ function MyApp(){
     }
 
     //delete user to backend
-    function deleteUser(person) {
-      const promise = fetch("Http://localhost:8000/users", {
+    function deleteUser(id) {
+      const url = `Http://localhost:8000/users/${id}`;
+      console.log(url);
+      const promise = fetch(url, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(person),
+          "Content-Type": "application/json"
+        }
       });
       return promise;
     }
 
     //function to filter/remove a character from the state
-    function removeOneCharacter(index) {
-        const updated = characters.filter((character, i) => {
-          return i !== index;
-        });
-        setCharacters(updated);
-      };
+    function removeOneCharacter(person) {
+      console.log(person.id);
+      deleteUser(person.id)
+      .then((res) => {
+        console.log("Resolved");
+        if (res.status === 204){
+          const updated = characters.filter((character)=>character!==person);
+          setCharacters(updated);
+        } else {
+          throw new Error("Response not 204");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      }
 
     //function to add a character to the state
     function addUser(person){
       postUser(person)
         .then((res) => {
-          console.log(res.status)
           if (res.status !== 201){
             throw new Error("Failed to create user");
           }
           return res.json();
         })
         .then((json) => {
+          console.log(json);
+          console.log(json.id);
           if (json.id === undefined){
             throw new Error("Failed to create user id");
           }
