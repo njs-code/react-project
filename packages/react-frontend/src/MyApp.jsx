@@ -73,12 +73,12 @@ function MyApp(){
           return res.json();
         })
         .then((json) => {
-          console.log(json);
-          console.log(json.id);
+          console.log("New Person added: ", json);
+          console.log("New Person ID: ", json.id);
+          setCharacters([...characters, json]);
           if (json.id === undefined){
             throw new Error("Failed to create user id");
           }
-          setCharacters([...characters, person]);
         })
         .catch((error) => {
           console.log(error);
