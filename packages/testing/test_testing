@@ -1,0 +1,5 @@
+const myFunctions = require('./target_functions.js');
+
+const result = myFunctions.containsNumbers("");
+
+console.log(result);
