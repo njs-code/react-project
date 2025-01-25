@@ -35,3 +35,13 @@ test('Testing empty string', () => {
     expect(result).toBe(false);
 })
 
+test('Testing special characters - false case', () => {
+    result = myFunctions.containsNumbers("\nhello & % @")
+    expect(result).toBe(false);
+})
+
+test('Testing special characters - true case', () => {
+    result = myFunctions.containsNumbers("\nh3llo & % @")
+    expect(result).toBe(true);
+})
+
