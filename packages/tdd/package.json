@@ -1,0 +1,11 @@
+{
+  "name": "tdd",
+  "version": "1.0.0",
+  "main": "portfolio.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,14 @@
+Current Portfolio:  [ { ticker: 'AAPL', shares: 2 } ]
+Current Portfolio:  [ { ticker: 'AAPL', shares: 4 } ]
+Current Portfolio:  [ { ticker: 'AAPL', shares: 2 } ]
+Current Portfolio:  [ { ticker: 'AAPL', shares: 1 } ]
+Current Portfolio:  []
+Current Portfolio:  [ { ticker: 'GOOGL', shares: 5 } ]
+Current Portfolio:  [ { ticker: 'GOOGL', shares: 5 }, { ticker: 'AAPL', shares: 3 } ]
+Current Portfolio:  [
+  { ticker: 'GOOGL', shares: 5 },
+  { ticker: 'AAPL', shares: 3 },
+  { ticker: 'GMR', shares: 3 }
+]
+Current Portfolio:  [ { ticker: 'AAPL', shares: 5 } ]
+Current Portfolio:  [ { ticker: 'AAPL', shares: 9 } ]
