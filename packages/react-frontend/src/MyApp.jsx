@@ -9,9 +9,15 @@ function MyApp(){
     //
     useEffect(() => {
       fetchUsers()
-        .then((res)=> res.json())
-        .then((json) => setCharacters(json["users_list"]))
-        .catch((error) => {console.log(error);})
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((json)=> {
+          console.log(json); 
+          setCharacters(json);
+        })
+        .catch((error) => {console.log("Error fetching users. ", error);})
     }, []);
 
     //get users from backend
@@ -47,8 +53,8 @@ function MyApp(){
 
     //function to filter/remove a character from the state
     function removeOneCharacter(person) {
-      console.log(person.id);
-      deleteUser(person.id)
+      console.log(person._id);
+      deleteUser(person._id)
       .then((res) => {
         console.log("Resolved");
         if (res.status === 204){
@@ -74,9 +80,9 @@ function MyApp(){
         })
         .then((json) => {
           console.log("New Person added: ", json);
-          console.log("New Person ID: ", json.id);
+          console.log("New Person ID: ", json._id);
           setCharacters([...characters, json]);
-          if (json.id === undefined){
+          if (json._id === undefined){
             throw new Error("Failed to create user id");
           }
         })
